@@ -1,0 +1,32 @@
+import React from 'react';
+import { shallow } from 'enzyme';
+import { EditExpensePage } from '../../components/EditExpensePage';
+import expenses from '../fixtures/expenses';
+
+let wrapper, editExpense, removeExpense, history;
+let expenseToBeEdited = expenses[0];
+
+beforeEach ( () => {
+    editExpense = jest.fn();
+    removeExpense = jest.fn();
+    history = {
+        push: jest.fn()
+    };
+    wrapper = shallow(<EditExpensePage expense={expenseToBeEdited} editExpense={editExpense} removeExpense={removeExpense} history={history} />);
+});
+
+test('should render EditExpensePage correctly', () => {
+    expect(wrapper).toMatchSnapshot();
+});
+
+test('should remove expense correctly', () => {
+    wrapper.find('button').at(0).simulate('click');
+    expect(removeExpense).toHaveBeenCalledWith(expenseToBeEdited);
+    expect(history.push).toHaveBeenCalledWith('/');
+});
+
+test('should edit expense correctly', () => {
+    wrapper.find('ExpenseForm').prop('onSubmit')(expenseToBeEdited);
+    expect(editExpense).toHaveBeenCalledWith(expenseToBeEdited.id, expenseToBeEdited);
+    expect(history.push).toHaveBeenCalledWith('/');
+});
