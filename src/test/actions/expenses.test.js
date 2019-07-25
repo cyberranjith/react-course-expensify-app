@@ -1,4 +1,10 @@
-import { addExpense, editExpense, removeExpense } from '../../actions/expenses';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { addExpense, editExpense, removeExpense, startAddExpense } from '../../actions/expenses';
+import expenses from '../fixtures/expenses';
+import database from '../../firebase/firebase';
+
+const createMockStore = configureMockStore([thunk]);
 
 test('should generate remove expense action', () => {
     const removeExpenseAction = removeExpense({ id: 'playnice' });
@@ -29,38 +35,68 @@ test('should generate edit expense action', () => {
 });
 
 test('should generate add expense action with provided values', () => {
-    const expenseToBeAdded = {
-        description: 'Expense to be modified',
-        amount: 100.0,
-        createdAt: 1212121,
-        note: 'Expense to be modified'
-    };
-
-    const addExpenseAction = addExpense(expenseToBeAdded);
+    const addExpenseAction = addExpense(expenses[2]);
     expect(addExpenseAction).toMatchObject({
       type: 'ADD_EXPENSE',
-      expense: {
-          ...expenseToBeAdded,
-          id: expect.any(String)
-      }
+      expense: expenses[2]
     })
 });
 
-test('should generate add expense action with default values', () => {
-    const defaultExpense = {
+test('should add expense to database and store', (done) => {
+    const store = createMockStore({});
+    const expenseData = {
+        description: 'Test',
+        amount: 3000,
+        note: 'This is a test',
+        createdAt: 1000
+    };
+    store.dispatch(startAddExpense(expenseData))
+        .then(() => {
+            const actions = store.getActions();
+            expect(actions[0]).toEqual({
+                type: 'ADD_EXPENSE',
+                expense: {
+                    id: expect.any(String),
+                    ...expenseData
+                }    
+            });
+
+            database.ref(`expense/${actions[0].expense.id}`)
+                .once('value')
+                .then((snapshot) => {
+                    expect(snapshot.val()).toEqual(expenseData);
+                    // Do the assertions only after all the async tasks are complete
+                    done();
+                });
+        });
+});
+
+test('should add expense with defaults to database and store', (done) => {
+    const store = createMockStore({});
+    const expenseDefaults = {
         description: '',
-        note: '',
         amount: 0,
+        note: '',
         createdAt: 0
     };
+    store.dispatch(startAddExpense({}))
+        .then(() => {
+            const actions = store.getActions();
+            expect(actions[0]).toEqual({
+                type: 'ADD_EXPENSE',
+                expense: {
+                    id: expect.any(String),
+                    ...expenseDefaults
+                }    
+            });
 
-    const addExpenseAction = addExpense();
-    expect(addExpenseAction).toMatchObject({
-        type: 'ADD_EXPENSE',
-        expense: {
-            ...defaultExpense,
-            id: expect.any(String)
-        }
-    });
+            database.ref(`expense/${actions[0].expense.id}`)
+                .once('value')
+                .then((snapshot) => {
+                    expect(snapshot.val()).toEqual(expenseDefaults);
+                    // Do the assertions only after all the async tasks are complete
+                    done();
+                });
+        });
 });
 

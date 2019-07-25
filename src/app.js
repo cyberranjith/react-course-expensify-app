@@ -11,6 +11,8 @@ import { sortByAmount } from './actions/filters';
 import { sortByDate } from './actions/filters';
 import getVisibleExpenses from './selectors/expenses';
 
+import './firebase/firebase';
+
 //css reset
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
