@@ -1,3 +1,5 @@
+import expenses from "../test/fixtures/expenses";
+
 // Expenses Reducer
 const expensesReducerDefaultState = [];
 
@@ -18,6 +20,8 @@ const expensesReducer = (expensesState = expensesReducerDefaultState, action) =>
                     return expense;
                 }
             });
+        case 'SET_EXPENSES':
+                return action.expenses;
         default:
             return expensesState;
     }
