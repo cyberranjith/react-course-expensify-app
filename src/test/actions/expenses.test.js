@@ -45,12 +45,10 @@ test('should remove expense from database and fire action to remove from redux s
                 }
             });
 
-            database.ref(`expense/${id}`)
-                .once('value')
-                .then((snapshot) => {
-                    expect(snapshot.val()).toEqual(null);
-                    done();
-                });
+            return database.ref(`expense/${id}`).once('value');
+        }).then((snapshot) => {
+            expect(snapshot.val()).toEqual(null);
+            done();
         });
 });
 
@@ -91,12 +89,10 @@ test('should edit expense in database and fire action to edit expense in redux s
             modifiedExpense: expenseToBeModified
         });
 
-        database.ref(`expense/${idOfExpenseToBeModified}`)
-            .once('value')
-            .then((snapshot) => {
-                expect(snapshot.val()).toEqual(expenseToBeModified);
-                done();
-            });
+        return database.ref(`expense/${idOfExpenseToBeModified}`).once('value');            
+    }).then((snapshot) => {
+        expect(snapshot.val()).toEqual(expenseToBeModified);
+        done();
     });
 });
 
@@ -127,13 +123,11 @@ test('should add expense to database and store', (done) => {
                 }    
             });
 
-            database.ref(`expense/${actions[0].expense.id}`)
-                .once('value')
-                .then((snapshot) => {
-                    expect(snapshot.val()).toEqual(expenseData);
-                    // Do the assertions only after all the async tasks are complete
-                    done();
-                });
+            return database.ref(`expense/${actions[0].expense.id}`).once('value');                
+        }).then((snapshot) => {
+            expect(snapshot.val()).toEqual(expenseData);
+            // Do the assertions only after all the async tasks are complete
+            done();
         });
 });
 
@@ -156,13 +150,11 @@ test('should add expense with defaults to database and store', (done) => {
                 }    
             });
 
-            database.ref(`expense/${actions[0].expense.id}`)
-                .once('value')
-                .then((snapshot) => {
-                    expect(snapshot.val()).toEqual(expenseDefaults);
-                    // Do the assertions only after all the async tasks are complete
-                    done();
-                });
+            return database.ref(`expense/${actions[0].expense.id}`).once('value');                
+        }).then((snapshot) => {
+            expect(snapshot.val()).toEqual(expenseDefaults);
+            // Do the assertions only after all the async tasks are complete
+            done();
         });
 });
 
