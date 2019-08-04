@@ -1,5 +1,3 @@
-import expenses from "../test/fixtures/expenses";
-
 // Expenses Reducer
 const expensesReducerDefaultState = [];
 
