@@ -21,8 +21,7 @@ test('should render EditExpensePage correctly', () => {
 
 test('should remove expense correctly', () => {
     wrapper.find('button').at(0).simulate('click');
-    expect(startRemoveExpense).toHaveBeenCalledWith(expenseToBeEdited);
-    expect(history.push).toHaveBeenCalledWith('/');
+    expect(wrapper.state('isRemoveButtonClicked')).toBe(true);
 });
 
 test('should edit expense correctly', () => {
