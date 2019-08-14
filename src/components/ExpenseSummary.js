@@ -6,16 +6,37 @@ import numeral from 'numeral';
 import selectExpenses from '../selectors/expenses';
 import getExpensesTotal from '../selectors/expenses-total';
 
-export const ExpenseSummary = ({ expenseCount, expenseTotal }) => {
+export const ExpenseSummary = ({ visibleExpenseCount, hiddenExpenseCount, expenseTotal }) => {
     const formattedExpenseTotal = numeral(expenseTotal / 100).format('$0,0.00');
     return (
         <div className="page-header">
             <div className="content-container">
                 { 
-                    expenseCount === 0 ? 
-                    ( <h1 className="page-header__title"> No expense returned </h1> ) :
-                    ( <h1 className="page-header__title"> Viewing <span>{expenseCount}</span> expense(s) totalling <span>{formattedExpenseTotal}</span> </h1> )
-                }
+                    visibleExpenseCount === 0 ? 
+                        ( 
+                            <h1 className="page-header__title"> 
+                                No expense returned 
+                            </h1> 
+                        ) :
+                        ( 
+                            <h1 className="page-header__title"> 
+                                Viewing <span>{visibleExpenseCount}</span> expense(s) totalling <span>{formattedExpenseTotal}</span> 
+                            </h1> 
+                        )
+                    }
+                    {
+                        hiddenExpenseCount === 0 ?
+                        (
+                            <h3 className="page-header__subtitle">
+                                No expense hidden due to filters
+                            </h3>
+                        ) :
+                        (
+                            <h3 className="page-header__subtitle">
+                                <span>{hiddenExpenseCount}</span> hidden expense due to filters
+                            </h3>
+                        )
+                    }                    
                 <div className="page-header__actions">
                     <Link className="button" to="/create">Add Expense</Link>
                 </div>
@@ -28,7 +49,8 @@ export const ExpenseSummary = ({ expenseCount, expenseTotal }) => {
 const mapStateToProps = (state) => {
     const visibleExpenses = selectExpenses(state.expenses, state.filters);
     return {
-        expenseCount: visibleExpenses.length,
+        visibleExpenseCount: visibleExpenses.length,
+        hiddenExpenseCount: state.expenses.length - visibleExpenses.length,
         expenseTotal: getExpensesTotal(visibleExpenses)
     }
 };

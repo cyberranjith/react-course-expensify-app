@@ -10,8 +10,19 @@ exports[`should render Expense Summary with no expense 1`] = `
     <h1
       className="page-header__title"
     >
-       No expense returned 
+      Viewing 
+      <span />
+       expense(s) totalling 
+      <span>
+        $0.00
+      </span>
     </h1>
+    <h3
+      className="page-header__subtitle"
+    >
+      <span />
+       hidden expense due to filters
+    </h3>
     <div
       className="page-header__actions"
     >
@@ -37,16 +48,19 @@ exports[`should render Expense Summary with one expense 1`] = `
     <h1
       className="page-header__title"
     >
-       Viewing 
-      <span>
-        1
-      </span>
+      Viewing 
+      <span />
        expense(s) totalling 
       <span>
         $10.00
       </span>
-       
     </h1>
+    <h3
+      className="page-header__subtitle"
+    >
+      <span />
+       hidden expense due to filters
+    </h3>
     <div
       className="page-header__actions"
     >
@@ -72,16 +86,19 @@ exports[`should render Expense Summary with three expense 1`] = `
     <h1
       className="page-header__title"
     >
-       Viewing 
-      <span>
-        3
-      </span>
+      Viewing 
+      <span />
        expense(s) totalling 
       <span>
         $114.56
       </span>
-       
     </h1>
+    <h3
+      className="page-header__subtitle"
+    >
+      <span />
+       hidden expense due to filters
+    </h3>
     <div
       className="page-header__actions"
     >
