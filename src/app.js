@@ -35,11 +35,13 @@ ReactDOM.render(<LoadingPage/>, document.getElementById('app'));
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+        console.log("Logged in");
         store.dispatch(login(user.uid));
         store.dispatch(startSetExpenses()).then(() => {
             renderApp();
         });
     } else {
+        console.log("Logged out");
         store.dispatch(logout());
         renderApp();
     }
